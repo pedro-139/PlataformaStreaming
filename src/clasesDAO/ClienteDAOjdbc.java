@@ -1,0 +1,142 @@
+package clasesDAO;
+
+import Modelo.POO.Cliente;
+import DB.ConexionSQLite;
+
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
+
+public class ClienteDAOjdbc implements ClienteDAO {
+
+    // Buscar cliente por ID
+    public Cliente encontrar(Long id) {
+        Cliente cliente = null;
+        try {
+            Connection con = ConexionSQLite.getCon();
+            String sql = "SELECT * FROM CLIENTE WHERE ID = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                cliente = new Cliente();
+                cliente.setNombre_usuario(rs.getString("NOMBRE_USUARIO"));
+                cliente.setMail(rs.getString("EMAIL"));
+                cliente.setContrasenia(rs.getString("CONTRASENIA"));
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println("Error de SQL: " + e.getMessage());
+        }
+        return cliente;
+    }
+
+    // Eliminar cliente por mail (o podés usar ID)
+    public void eliminar(Cliente c) {
+        try {
+            Connection con = ConexionSQLite.getCon();
+            String sql = "DELETE FROM CLIENTE WHERE EMAIL = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, c.getMail());
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("Error de SQL: " + e.getMessage());
+        }
+    }
+
+    // Guardar cliente
+    public void guardar(Cliente c) {
+        try {
+            Connection con = ConexionSQLite.getCon();
+            String sql = "INSERT INTO CLIENTE (NOMBRE_USUARIO, EMAIL, CONTRASENIA,ID_DATOS_PERSONALES) VALUES (?, ?, ?,?)";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, c.getNombre_usuario());
+            ps.setString(2, c.getMail());
+            ps.setString(3, c.getContrasenia());
+            ps.setInt(4, c.getIdDP());
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("Error de SQL: " + e.getMessage());
+        }
+    }
+
+    // Listar todos los clientes
+    public List<Cliente> listar() {
+        List<Cliente> lista = new LinkedList<>();
+        try {
+            Connection con = ConexionSQLite.getCon();
+            String sql = "SELECT * FROM CLIENTE";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setNombre_usuario(rs.getString("NOMBRE_USUARIO"));
+                cliente.setMail(rs.getString("EMAIL"));
+                cliente.setContrasenia(rs.getString("CONTRASENIA"));
+                lista.add(cliente);
+            }
+          
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println("Error de SQL: " + e.getMessage());
+        }
+        return lista;
+    }
+
+public boolean validarCliente(String usuario, String contrasenia) {
+	boolean existe = false;
+	 try {
+         Connection con = ConexionSQLite.getCon();
+         String sql = "SELECT 1 FROM CLIENTE WHERE NOMBRE_USUARIO = ? AND CONTRASENIA = ?";
+         PreparedStatement ps = con.prepareStatement(sql);
+         ps.setString(1, usuario);
+         ps.setString(2, contrasenia);
+         ResultSet rs = ps.executeQuery();
+
+         if (rs.next()) {
+            existe = true;
+         }
+
+         rs.close();
+         ps.close();
+
+     } 
+	 catch (SQLException e) {
+         System.out.println("Error de SQL: " + e.getMessage());
+     }
+	return existe;
+	}
+
+public int obtenerID(String usuario, String contrasenia) {
+	int id= -1;
+	 try {
+         Connection con = ConexionSQLite.getCon();
+         String sql = "SELECT ID FROM CLIENTE WHERE NOMBRE_USUARIO = ? AND CONTRASENIA = ?";
+         PreparedStatement ps = con.prepareStatement(sql);
+         ps.setString(1, usuario);
+         ps.setString(2, contrasenia);
+         ResultSet rs = ps.executeQuery();
+
+         if (rs.next()) {
+            id = rs.getInt("ID");
+         }
+
+         rs.close();
+         ps.close();
+
+     } 
+	 catch (SQLException e) {
+         System.out.println("Error de SQL: " + e.getMessage());
+     }
+	return id;
+	}
+}

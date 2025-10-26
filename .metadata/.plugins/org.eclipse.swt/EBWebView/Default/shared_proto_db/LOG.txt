@@ -1,0 +1,2 @@
+2025/10/18-22:09:34.247 3360 Creating DB C:\Users\Pedro\Desktop\TP Entregable 2\Entregable_2\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\shared_proto_db since it was missing.
+2025/10/18-22:09:34.252 3360 Reusing MANIFEST C:\Users\Pedro\Desktop\TP Entregable 2\Entregable_2\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\shared_proto_db/MANIFEST-000001
