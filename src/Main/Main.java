@@ -22,7 +22,8 @@ public class Main {
 	        	
 	    int opcion = -1;
 
-	    while (opcion != 0) {
+	    do {
+	    	System.out.println("Este mensaje es nuevo");
 	        System.out.println("\n=== MENU PRINCIPAL ===");
 	        System.out.println("Seleccione una opción: ");
 	        System.out.println("0. Salir");
@@ -127,9 +128,9 @@ public class Main {
 		    }
 	        default :{
 	            System.out.println("Opción inválida");
-		    } // del default
-	        } // del switch      
-        } // del while
+		    } 
+	        }   
+	    }  while (opcion != 0) ;
 	    s.close();
     }
 }
