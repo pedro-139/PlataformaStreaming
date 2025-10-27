@@ -16,13 +16,13 @@ public class ValidacionesDatosPersonales {
         while (!valido) {
             System.out.print("Ingrese el nombre: ");
             d.setNombre(s.nextLine());
-            if(d.getNombre() != null && !d.getNombre().isBlank()) {
+            if(d.getNombre() != null && !d.getNombre().isBlank() && verificarNomApe(d.getNombre())) {
                 System.out.println("Se ingresó: '" + d.getNombre() + "'. ¿Es correcto? (y/n)");
                 res = s.next();
-                s.nextLine(); // limpiar buffer
+                s.nextLine(); 
                 if(res.equalsIgnoreCase("y")) valido = true;
             } else {
-                System.out.println("Se introdujo un nombre inválido.");
+                System.out.println("Se introdujo un nombre inválido. El nombre no debe contener numeros");
             }
         }
 
@@ -31,13 +31,13 @@ public class ValidacionesDatosPersonales {
         while (!valido) {
             System.out.print("Ingrese el apellido: ");
             d.setApellido(s.nextLine());
-            if(d.getApellido() != null && !d.getApellido().isBlank()) {
+            if(d.getApellido() != null && !d.getApellido().isBlank() && verificarNomApe(d.getApellido())) {
                 System.out.println("Se ingresó: '" + d.getApellido() + "'. ¿Es correcto? (y/n)");
                 res = s.next();
                 s.nextLine(); 
                 if(res.equalsIgnoreCase("y")) valido = true;
             } else {
-                System.out.println("Se introdujo un apellido inválido.");
+                System.out.println("Se introdujo un apellido inválido. El apellido no debe contener numeros");
             }
         }
 
@@ -46,17 +46,26 @@ public class ValidacionesDatosPersonales {
         while (!valido) {
         	DatosPersonalesDAOjdbc dao = new DatosPersonalesDAOjdbc();
             System.out.print("Ingrese el DNI: ");
-            d.setDNI(s.nextInt());
-            if ( !(dao.existeDNI(d.getDNI())) ) { // si no existe en la BD
-                System.out.println("Se ingresó: '" + d.getDNI() + "'. ¿Es correcto? (y/n)");
-                res = s.next();
-                s.nextLine(); // limpiar buffer
-                if (res.equalsIgnoreCase("y")) 
-                	valido = true;
-            } else {
-                System.out.println("El DNI ya existe en la base de datos. Ingrese otro.");
+            
+            if (s.hasNextInt()) {
+            	d.setDNI(s.nextInt());
+        	   if ( !(dao.existeDNI(d.getDNI()) ) ) { // si no existe en la BD        		   
+        		   System.out.println("Se ingresó: '" + d.getDNI() + "'. ¿Es correcto? (y/n)");
+        		   res = s.next();
+        		   s.nextLine(); 
+        		   if (res.equalsIgnoreCase("y")) {
+        			   	valido = true;
+        		   		
+        		   }	
+        	   } 	else {
+        		   System.out.println("El DNI ya existe en la base de datos. Ingrese otro.");
+        	   }
+           }
+            else {
+            	 System.out.println("El DNI solo debe tener numeros. Ingrese otro.");
             }
         }
+   
         return d;
     }
 	

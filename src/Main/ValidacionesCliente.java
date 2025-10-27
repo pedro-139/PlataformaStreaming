@@ -5,11 +5,8 @@ import java.util.Scanner;
 
 import Comparadores.ComparadorMail;
 import Comparadores.ComparadorNombreUsuario;
-import Modelo.POO.Cliente;
-import Modelo.POO.DatosPersonales;
-import clasesDAO.ClienteDAO;
-import clasesDAO.DatosPersonalesDAOjdbc;
-import clasesDAO.FactoryDAO;
+import Modelo.POO.*;
+import clasesDAO.*;
 
 public class ValidacionesCliente {
 	public static boolean verificarCorreo(String c) {
@@ -22,28 +19,33 @@ public class ValidacionesCliente {
 	
 	public static Cliente registrarCliente(Scanner s) {
 		 Cliente u = new Cliente();
-		 DatosPersonalesDAOjdbc daoDatos = new DatosPersonalesDAOjdbc();
+		 DatosPersonalesDAO daoDatos = FactoryDAO.getDatosPersonalesDAO();
 		 List <DatosPersonales> lista = daoDatos.listar();
 		 boolean valido =false;
 		 int opcion;
 		 String res;
 		 while (!valido) {
-	            System.out.print("Elegir una persona: ");
+	            System.out.println("Elegir una persona: ");
 	            for(int i = 0; i<lista.size(); i++) {
-	             	  System.out.println("Datos Personales: " + (i + 1) + ": " + lista.get(i).toString());
+	             	  System.out.println((i + 1) + ": " + lista.get(i).toString());
 	               }
-	            opcion = s.nextInt();
-	            if(opcion - 1<lista.size()) {
-	                System.out.println("Se seleccionó: '" +lista.get(opcion-1).toString() + "'. ¿Es correcto? (y/n)");
-	                res = s.next();
-	                s.nextLine(); // limpiar buffer
-	                if(res.equalsIgnoreCase("y")) {
-	                	valido = true;
-	          //      	u.setDatosP(lista.get(opcion-1));
-	                }
-	            } else {
-	                System.out.println("Se introdujo una opcion inválido.");
+	            if (s.hasNextInt()) {
+	            	opcion = s.nextInt();
+	            	 s.nextLine();
+	            	if(opcion > 0 && opcion - 1<lista.size()) {
+	            		System.out.println("Se seleccionó: '" +lista.get(opcion-1).toString() + "'. ¿Es correcto? (y/n)");
+	            		res = s.next();
+	            		s.nextLine(); 
+	            		if(res.equalsIgnoreCase("y")) {
+	            			valido = true;            
+	            			u.setIdDP(daoDatos.obtenerId(lista.get(opcion - 1)));             	
+	            		}
+	            	} else {
+	            		System.out.println("Se introdujo una opcion inválido.");
+	            	}
 	            }
+	            	else System.out.println("Se debe introducir un numero.");
+	           
 	        }
 		 // nombre usuario
 		 valido = false;
@@ -66,6 +68,7 @@ public class ValidacionesCliente {
 	        while (!valido) {
 	            System.out.print("Ingrese el correo: ");
 	            u.setMail(s.next());
+	            s.nextLine();
 	            if(u.getMail() != null && verificarCorreo(u.getMail())) {
 	                System.out.println("Se ingresó: '" + u.getMail() + "'. ¿Es correcto? (y/n)");
 	                res = s.next();

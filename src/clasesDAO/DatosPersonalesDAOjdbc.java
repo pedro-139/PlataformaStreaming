@@ -72,7 +72,6 @@ public class DatosPersonalesDAOjdbc implements DatosPersonalesDAO {
 				 datosp.setDNI(rs.getInt(4));
 				 Lista.add(datosp);
 			 }
-			 System.out.println("DEBUG: Se encontraron " + Lista.size() + " registros.");
 			 rs.close();
 			 st.close();
 

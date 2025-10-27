@@ -28,7 +28,7 @@ public class ValidacionesResenia {
 		 while (!valido) {
 	            System.out.print("Ingresar nombre de usuario: ");
 	            String nombre = s.next();
-	            System.out.print("Ingresar contrasenia: ");
+	            System.out.print("Ingresar contraseña: ");
 	            String contrasenia = s.next();
 	            if ( daoCliente.validarCliente(nombre, contrasenia)){
 	            	idC = daoCliente.obtenerID(nombre, contrasenia);
@@ -43,13 +43,15 @@ public class ValidacionesResenia {
 		 //Validar Pelicula
 		 valido = false;		 
 		 lista = ValidacionesPelicula.listarPeliculas(s);
-		 System.out.print("Seleccione una pelicula de la lista: ");
+		 System.out.println("Seleccione una pelicula de la lista: ");
 		 for(int i = 0; i<lista.size(); i++) {
           	  System.out.println("Pelicula " + (i + 1) + ": " + lista.get(i).toString());
             }	 
 		 while(!valido) {		
+		 if (s.hasNextInt()) {
 		 opcion = s.nextInt();
-		 if (opcion - 1 < lista.size()) {
+		 s.nextLine();
+		 if (opcion > 0 && opcion - 1 < lista.size()) {
 			 idP = daoPelicula.obtenerID(lista.get(opcion-1));
 			 valido = true;
 		 }
@@ -57,22 +59,34 @@ public class ValidacionesResenia {
 			 System.out.println("Se introdujo una posicion invalida.");
 		 	}
 		 }
+		 else {
+			 System.out.println("Se debe ingresar un número.");
+			 s.nextLine();
+		 }
+		 }
 		 
 		 valido = false;
 		 //ingresar reseña
 		 //calificacion
 	        while (!valido) {
 	            System.out.print("Ingrese la calificacion de la Pelicula (1-100): ");
-	            r.setCalificacion(s.nextInt());
-	            if( r.getCalificacion() > 0 &&  r.getCalificacion() <= 100) {
-	                System.out.println("Se ingresó: '" + r.getCalificacion() + "'. ¿Es correcto? (y/n)");
-	                res = s.next();
-	                s.nextLine();
-	                if(res.equalsIgnoreCase("y")) valido = true;
-	            } else {
-	                System.out.println("Se introdujo una calificacion inválida.");
-	            }
+	            if(s.hasNextInt()) {
+	            	r.setCalificacion(s.nextInt());
+	            	s.nextLine();
+	            	if( r.getCalificacion() > 0 &&  r.getCalificacion() <= 100) {
+	            		System.out.println("Se ingresó: '" + r.getCalificacion() + "'. ¿Es correcto? (y/n)");
+	            		res = s.next();
+	            		s.nextLine();
+	            		if(res.equalsIgnoreCase("y")) valido = true;
+	            	} else {
+	            		System.out.println("Se introdujo una calificacion inválida.");
+	            	}
+	        } else {
+	        	System.out.println("La calificacion debe ser un numero.");
+	        	s.nextLine();
 	        }
+	        }
+	        
 	       //comentario
 	       valido = false;
 	       while(!valido) {
@@ -90,6 +104,7 @@ public class ValidacionesResenia {
 	       //aprobado
 	       r.setAprobado(false);
 	       //fecha_hora
+	       
 	       r.setFecha_hora(LocalDateTime.now());
 	       //id cliente
 	       r.setIdC(idC);
@@ -102,28 +117,38 @@ public class ValidacionesResenia {
 	    Resenia r = new Resenia();
 	    ReseniaDAO rDAO = FactoryDAO.getReseniaDAO();
 	    List<Resenia> lista = rDAO.listarNoAprobadas();
-	    int opcion = -1 ; 
-	    boolean valido = false;
-	    String res;
-	    for (int i = 0 ; i<lista.size() ; i++) {
-		    System.out.println("Reseña " + (i + 1) + ": " + lista.get(i).toString());
-	    }
-	    while (!valido) {
-		    System.out.println("Seleccionar una reseña: ");
-		    opcion = s.nextInt();
-		    if (opcion - 1 < lista.size()) {
-			    r= lista.get(opcion-1);
-			    System.out.println("Se ingresó la reseña: '" + r.toString()+ "'. ¿Es correcto? (y/n)");
-                res = s.next();
-                s.nextLine();
-                if (res.equalsIgnoreCase("y")) 
-                    valido = true;
-              
-		    }
-		    else {
-			    System.out.println("La reseña seleccionada no existe.");
-		    }
-	    }
-	rDAO.aprobarResenia(r);
+	    if (lista.size() != 0) {
+	    	int opcion = -1 ; 
+	    	boolean valido = false;
+	    	String res;
+	    	for (int i = 0 ; i<lista.size() ; i++) {
+	    		System.out.println("Reseña " + (i + 1) + ": " + lista.get(i).toString());
+	    	}
+	    	while (!valido) {
+	    		System.out.println("Seleccionar una reseña: ");
+	    		if (s.hasNextInt()) {
+	    		opcion = s.nextInt();
+	    		s.nextLine();
+	    		if (opcion >0 && opcion - 1 < lista.size()) {
+	    			r= lista.get(opcion-1);
+	    			System.out.println("Se ingresó la reseña: '" + r.toString()+ "'. ¿Es correcto? (y/n)");
+	    			res = s.next();
+	    			s.nextLine();
+	    			if (res.equalsIgnoreCase("y")) {
+	    				valido = true; 
+	    				rDAO.aprobarResenia(r);		           
+	    		}
+	    		}
+	    		else {
+	    			System.out.println("La reseña seleccionada no existe.");
+	    		}
+	    	}
+	    	else {
+	    			System.out.println("Se debe ingresar un número.");
+	    			s.nextLine();
+	    	}
 	}
+	    }
+	    else System.out.println("No hay reseñas no aprobadas en la base de datos.");	       
+}
 }

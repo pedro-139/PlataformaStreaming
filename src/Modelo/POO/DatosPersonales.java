@@ -54,7 +54,7 @@ public void setIdioma(String idioma) {
 
 
 public String toString() {
-	return "DatosPersonales [nombre=" + nombre + ", apellido=" + apellido + ", DNI=" + DNI +"]";
+	return "Nombre = " + nombre + ", Apellido = " + apellido + ", DNI = " + DNI;
 }
 
 }

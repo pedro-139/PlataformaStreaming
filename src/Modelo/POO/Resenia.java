@@ -1,6 +1,7 @@
 package Modelo.POO;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 public class Resenia {
 private int calificacion;
 private String comentario;
@@ -57,8 +58,11 @@ public void setIdP(int idP) {
 }
 @Override
 public String toString() {
-	return "Resenia [calificacion=" + calificacion + ", comentario=" + comentario + ", aprobado=" + aprobado
-			+ ", fecha_hora=" + fecha_hora + ", idC=" + idC + ", idP=" + idP + "]";
+	
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    String fechaFormateada = fecha_hora.format(formatter);
+	return "Calificación = " + calificacion + ", Comentario = " + comentario + ", Aprobado = " + aprobado
+			+ ", Fecha = " + fechaFormateada;
 }
 
 }

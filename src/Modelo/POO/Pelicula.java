@@ -51,8 +51,8 @@ public void setDuracion(float duracion) {
 }
 @Override
 public String toString() {
-	return "Pelicula [genero=" + genero + ", titulo=" + titulo + ", resumen=" + resumen + ", director=" + director
-			+ ", duracion=" + duracion + "]";
+	return "Género = " + genero + ", Título = " + titulo + ", Resumen = " + resumen + ", Director = " + director
+			+ ", Duración = " + duracion;
 }
 
 

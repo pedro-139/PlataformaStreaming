@@ -21,9 +21,7 @@ public class Main {
 	    }
 	        	
 	    int opcion = -1;
-
-	    do {
-	    	System.out.println("Este mensaje es nuevo");
+	    while (opcion != 0) {	
 	        System.out.println("\n=== MENU PRINCIPAL ===");
 	        System.out.println("Seleccione una opción: ");
 	        System.out.println("0. Salir");
@@ -34,104 +32,121 @@ public class Main {
 	        System.out.println("5. Listar Peliculas ");
 	        System.out.println("6. Registrar Reseña ");
 	        System.out.println("7. Aprobar Reseña ");	                
-	          
-	        opcion = s.nextInt();
-	        s.nextLine();
-
-	        switch (opcion) {
-	        case 0: {
-	            System.out.println("Saliendo...");
-	            break;
+	        if (s.hasNextInt()) {
+	        	opcion =s.nextInt();
+	        	s.nextLine();
+	        	 if (opcion <0 || opcion >7) System.out.println("Opción inválida.");
+	        	 else {
+	        		 switch (opcion) {
+	        		 case 0: {
+	        			 System.out.println("Saliendo...");
+	        			 break;
+	        		 }
+	        		 case 1:{ 
+	        			 DatosPersonales d;
+	        			 DatosPersonalesDAO dDAO = FactoryDAO.getDatosPersonalesDAO();
+	        			 valido = false;
+	        			 while(!valido){
+	        				 d = ValidacionesDatosPersonales.registrarDatosPersonales(s);
+	        				 System.out.println("Los datos ingresados son: '" +d.toString() + "'. ¿Es correcto? (y/n)");
+	        				 res = s.next();
+	        				 s.nextLine(); 
+	        				 if (res.equalsIgnoreCase("y")) {
+	        					 valido = true;
+	        					 dDAO.guardar(d);
+	        				 }  
+	        			 }
+	        			 break;
+	        		 }
+	        		 case 2: {
+	        			 Cliente c;
+	        			 ClienteDAO cDAO = FactoryDAO.getClienteDAO();
+	        			 valido = false;
+	        			 while(!valido){
+	        				 c = ValidacionesCliente.registrarCliente(s);
+	        				 System.out.println("Los datos ingresados son: '" +c.toString() + "'. ¿Es correcto? (y/n)");
+	        				 res = s.next();
+	        				 s.nextLine(); 
+	        				 if (res.equalsIgnoreCase("y")) {
+	        					 valido = true;
+	        					 cDAO.guardar(c);
+	        				 }  
+	        			 }
+	        			 break;
+	        		 }
+	        		 case 3:{ 
+	        			 Pelicula p;
+	        			 PeliculaDAO pDAO = FactoryDAO.getPeliculaDAO();                
+	        			 valido = false;
+	        			 while(!valido){
+	        				 p = ValidacionesPelicula.registrarPelicula(s);
+	        				 System.out.println("Los datos ingresados son: '" +p.toString() + "'. ¿Es correcto? (y/n)");
+	        				 res = s.next();
+	        				 s.nextLine(); 
+	        				 if (res.equalsIgnoreCase("y")) {
+	        					 valido = true;
+	        					 pDAO.guardar(p);
+	        				 }  
+	        			 } 
+	        			 break;
+	        		 }
+	        		 case 4:{        		
+	        			 List<Cliente> lista = ValidacionesCliente.listarClientes(s);
+	        			 if(lista.size() != 0) {
+	        				 for (int i = 0; i<lista.size(); i++) {    	
+	        					 System.out.println("Cliente " + (i + 1) + ": " + lista.get(i).toString());
+	        				 }	
+	        			 }
+	        			 else  System.out.println("No hay clientes en la base de datos.");	        		
+	        			 break;
+	        		 }
+	        		 case 5:{
+	        			 List<Pelicula> lista = ValidacionesPelicula.listarPeliculas(s); 
+	        			 if(lista.size() != 0) {
+	        				 for (int i = 0; i<lista.size(); i++) {
+	        					 System.out.println("Pelicula " + (i + 1) + ": " + lista.get(i).toString());
+	        				 }
+	        			 }
+	        			 else System.out.println("No hay peliculas en la base de datos.");	            
+	        			 break;
+	        		 }
+	        		 case 6:{ 
+	        			 Resenia r;
+	        			 ReseniaDAO rDAO = FactoryDAO.getReseniaDAO();
+	        			 valido = false;
+	        			 while(!valido){
+	        				 r = ValidacionesResenia.registrarResenia(s);
+	        				 System.out.println("Los datos ingresados son: '" +r.toString() + "'. ¿Es correcto? (y/n)");
+	        				 res = s.next();
+	        				 s.nextLine(); 
+	        				 if (res.equalsIgnoreCase("y")) {
+	        					 valido = true;
+	        					 rDAO.guardar(r);
+	        				 }  
+	        			 }
+	        			 break;
+	        		 }
+	        		 case 7 :{ 
+	        			 ValidacionesResenia.aprobarResenia(s);
+	        			 break;
+	        		 }
+	        		 default :{
+	        			 System.out.println("Opción inválida");
+	        		 } 
+	        		 }
+	        	 }
 	        }
-	        case 1:{ 
-	        	 DatosPersonales d;
-		            DatosPersonalesDAO dDAO = FactoryDAO.getDatosPersonalesDAO();
-		            valido = false;
-		            while(!valido){
-		                d = ValidacionesDatosPersonales.registrarDatosPersonales(s);
-		                System.out.println("Los datos ingresados son: '" +d.toString() + "'. ¿Es correcto? (y/n)");
-		         	    res = s.next();
-		         	    s.nextLine(); 
-		         	    if (res.equalsIgnoreCase("y")) {
-		         	        valido = true;
-		         	        dDAO.guardar(d);
-		         	    }  
-		            }
-	            break;
-	        }
-	        case 2: {
-	            Cliente c;
-	            ClienteDAO cDAO = FactoryDAO.getClienteDAO();
-	            valido = false;
-	            while(!valido){
-	                c = ValidacionesCliente.registrarCliente(s);
-	                System.out.println("Los datos ingresados son: '" +c.toString() + "'. ¿Es correcto? (y/n)");
-	         	    res = s.next();
-	         	    s.nextLine(); 
-	         	    if (res.equalsIgnoreCase("y")) {
-	         	        valido = true;
-	         	        cDAO.guardar(c);
-	         	    }  
-	            }
-	            break;
-	        }
-	        case 3:{ 
-	        	Pelicula p;
-                PeliculaDAO pDAO = FactoryDAO.getPeliculaDAO();
-                
-                valido = false;
-                while(!valido){
-                    p = ValidacionesPelicula.registrarPelicula(s);
-                    System.out.println("Los datos ingresados son: '" +p.toString() + "'. ¿Es correcto? (y/n)");
-         	        res = s.next();
-         	        s.nextLine(); 
-         	        if (res.equalsIgnoreCase("y")) {
-         	            valido = true;
-         	            pDAO.guardar(p);
-         	        }  
-                } 
-		        break;
-		    }
-	        case 4:{
-	            List<Cliente> lista = ValidacionesCliente.listarClientes(s);
-	            for (int i = 0; i<lista.size(); i++) {
-	                System.out.println("Cliente " + (i + 1) + ": " + lista.get(i).toString());
-	            }
-		        break;
-		    }
-	        case 5:{
-	            List<Pelicula> lista = ValidacionesPelicula.listarPeliculas(s); 
-	            for (int i = 0; i<lista.size(); i++) {
-	                System.out.println("Pelicula " + (i + 1) + ": " + lista.get(i).toString());
-	            }
-		        break;
-		    }
-	        case 6:{ 
-	            Resenia r;
-	            ReseniaDAO rDAO = FactoryDAO.getReseniaDAO();
-	            valido = false;
-	            while(!valido){
-	                r = ValidacionesResenia.registrarResenia(s);
-	                System.out.println("Los datos ingresados son: '" +r.toString() + "'. ¿Es correcto? (y/n)");
-	         	    res = s.next();
-	         	    s.nextLine(); 
-	         	    if (res.equalsIgnoreCase("y")) {
-	         	        valido = true;
-	         	        rDAO.guardar(r);
-	         	    }  
-	            }
-	            break;
-	        }
-	        case 7 :{ 
-	        	ValidacionesResenia.aprobarResenia(s);
-		        break;
-		    }
-	        default :{
-	            System.out.println("Opción inválida");
-		    } 
-	        }   
-	    }  while (opcion != 0) ;
-	    s.close();
+	        	 else {
+		       	    	System.out.println("Entrada inválida. Debe ser un número.");
+		       	        s.nextLine();    
+		        }
+	        		 
+	        }  while (opcion != 0) ;
+	        
+    	  
+	        s.close();
+	    }
     }
-}
+
+
 
