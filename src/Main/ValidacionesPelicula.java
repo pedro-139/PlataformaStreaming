@@ -20,8 +20,9 @@ public class ValidacionesPelicula {
 
         // TÍTULO
         valido = false;
+       
         while (!valido) {
-            System.out.print("Ingrese el título: ");
+        	System.out.print("Ingrese el título (obligatorio): ");
             p.setTitulo(s.nextLine());
             if(p.getTitulo() != null && !p.getTitulo().isBlank()) {
                 System.out.println("Se ingresó: '" + p.getTitulo() + "'. ¿Es correcto? (y/n)");
@@ -29,7 +30,7 @@ public class ValidacionesPelicula {
                 s.nextLine(); 
                 if(res.equalsIgnoreCase("y")) valido = true;
             } else {
-                System.out.println("Se introdujo un nombre inválido.");
+                System.out.println("Se introdujo un nombre inválido. El cambo no debe estar vacio");
             }
         }
 
@@ -39,8 +40,9 @@ public class ValidacionesPelicula {
 
         // DIRECTOR
         valido = false;
+      
         while (!valido) {
-            System.out.print("Ingrese el nombre del director: ");
+        	System.out.print("Ingrese el nombre del director (obligatorio): ");
             p.setDirector(s.nextLine());
             if(p.getDirector() != null && !p.getDirector().isBlank()) {
                 System.out.println("Se ingresó: '" + p.getDirector() + "'. ¿Es correcto? (y/n)");
@@ -48,14 +50,16 @@ public class ValidacionesPelicula {
                 s.nextLine(); 
                 if(res.equalsIgnoreCase("y")) valido = true;
             } else {
-                System.out.println("Se introdujo un nombre inválido.");
+                System.out.println("Se introdujo un nombre inválido. El cambo no debe estar vacio");
+               
             }
         }
 
         // DURACIÓN
         valido = false;
+        
         while (!valido) {
-            System.out.print("Ingrese la duración (en minutos): ");
+        	System.out.print("Ingrese la duración en minutos (obligatorio): ");
             if(s.hasNextFloat()) {
                 p.setDuracion(s.nextFloat());
                 s.nextLine(); 
@@ -69,16 +73,15 @@ public class ValidacionesPelicula {
                 }
             } else {
                 System.out.println("Entrada inválida. Debe ser un número.");
-                s.nextLine(); 
+                s.nextLine();
             }
         }
 
         // GÉNERO
         valido = false;
+        System.out.println("Ingrese el género según las siguientes opciones (obligatorio):");
+        System.out.println("(1) ACCION - (2) COMEDIA - (3) DRAMA - (4) TERROR - (5) ROMANCE");
         while (!valido) {
-            System.out.println("Ingrese el género según las siguientes opciones:");
-            System.out.println("(1) ACCION - (2) COMEDIA - (3) DRAMA - (4) TERROR - (5) ROMANCE");
-
             if(s.hasNextInt()) {
                 int gen = s.nextInt();
                 s.nextLine(); 
@@ -109,41 +112,51 @@ public class ValidacionesPelicula {
 		 PeliculaDAO pDAO = FactoryDAO.getPeliculaDAO();
 		 List<Pelicula> lista = pDAO.listar();
 		 int opcion;
+		 boolean termino = false ;
          do {
         	 System.out.println("Ordenar la lista por: ");
              System.out.println("0. Ningun orden");
              System.out.println("1. Titulo ");
              System.out.println("2. Genero");      
              System.out.println("3. Duracion"); 
-       
-             opcion = s.nextInt();
-             s.nextLine(); 
-
-             switch (opcion) {
-             		case 0: {
-             			System.out.println("Lista de peliculas (sin orden): ");
-             			break;
-             		}
-             		case 1:{ 
-             			lista.sort(new ComparadorTitulo());
-             			System.out.println("Lista de peliculas (ordenado por Titulo): ");
-             		break;
-             		}
-             		case 2:{ 
-             			lista.sort(new ComparadorGenero());
-             			System.out.println("Lista de peliculas (ordenado por Genero): ");
-             		break;
-             		}
-             		case 3:{
-             			lista.sort(new ComparadorDuracion());
-             			System.out.println("Lista de peliculas (ordenado por Duracion): ");
-             		break;
-             		}
-             		default :{
-             			System.out.println("Opción inválida");
-	                    } 
+             if (s.hasNextInt()) {
+            	 opcion = s.nextInt();
+            	 s.nextLine(); 
+      
+            	 switch (opcion) {
+            	 case 0: {
+            		 System.out.println("Lista de peliculas (sin orden): ");
+            		 termino = true;
+            		 break;
+            	 }
+            	 case 1:{ 
+            		 lista.sort(new ComparadorTitulo());
+            		 System.out.println("Lista de peliculas (ordenado por Titulo): ");
+            		 termino = true;
+            		 break;
+            	 }
+            	 case 2:{ 
+            		 lista.sort(new ComparadorGenero());
+            		 System.out.println("Lista de peliculas (ordenado por Genero): ");
+            		 termino = true;
+            		 break;
+            	 }
+            	 case 3:{
+            		 lista.sort(new ComparadorDuracion());
+            		 System.out.println("Lista de peliculas (ordenado por Duracion): ");
+            		 termino = true;
+  	          		break;
+            	 }
+            	 default :{
+   	         			System.out.println("Opción inválida");
+            	 }            	 
              }
-         } while (opcion < 0 && opcion > 3);
+         }
+             else {
+            	 System.out.println("Opcion invalida. Se debe ingresar un numero");
+            	 s.nextLine();
+             }
+         }while (!termino);
              return lista;
 	}
 }

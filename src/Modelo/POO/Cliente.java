@@ -53,7 +53,7 @@ public void setIdDP(int idDP) {
 }
 
 public String toString() {
-	return "Nombre de usuario = " + nombre_usuario + ", Mail = " + mail + ", Contraseña = " + contrasenia;
+	return "Nombre de usuario = " + nombre_usuario + ", Email = " + mail + ", Contraseña = " + contrasenia +", ID Datos personales = " +idDP;
 }
 
 

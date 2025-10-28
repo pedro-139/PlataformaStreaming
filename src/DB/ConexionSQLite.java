@@ -11,7 +11,7 @@ public class ConexionSQLite {
             System.out.println("Conexión establecida con la base de datos.");
         }
         catch (ClassNotFoundException e) {
-            System.out.println("❌ Error: No se encontró el driver JDBC de SQLite.");
+            System.out.println("Error: No se encontró el driver JDBC de SQLite.");
         }
         catch (java.sql.SQLException e) {
             System.out.println("Error de SQL: " + e.getMessage());

@@ -7,7 +7,7 @@ public interface DatosPersonalesDAO {
 
 List<DatosPersonales> listar();
 void eliminar(DatosPersonales d);
-DatosPersonales encontrar (Long id);
+DatosPersonales encontrar (int id);
 void guardar(DatosPersonales d);
 public boolean existeDNI(int i);
 public int obtenerId(DatosPersonales d);

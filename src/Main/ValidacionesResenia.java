@@ -26,10 +26,10 @@ public class ValidacionesResenia {
 		 
 		 //Validar Cliente
 		 while (!valido) {
-	            System.out.print("Ingresar nombre de usuario: ");
-	            String nombre = s.next();
-	            System.out.print("Ingresar contraseña: ");
-	            String contrasenia = s.next();
+	            System.out.print("Ingresar nombre de usuario (obligatorio): ");
+	            String nombre = s.nextLine();
+	            System.out.print("Ingresar contraseña (obligatorio): ");
+	            String contrasenia = s.nextLine();
 	            if ( daoCliente.validarCliente(nombre, contrasenia)){
 	            	idC = daoCliente.obtenerID(nombre, contrasenia);
 	            	valido = true;
@@ -40,36 +40,36 @@ public class ValidacionesResenia {
 	            }
 	        }
 		 
-		 //Validar Pelicula
+		 // Validar Pelicula
 		 valido = false;		 
 		 lista = ValidacionesPelicula.listarPeliculas(s);
-		 System.out.println("Seleccione una pelicula de la lista: ");
+		 System.out.println("Seleccione una pelicula de la lista (obligatorio): ");
 		 for(int i = 0; i<lista.size(); i++) {
           	  System.out.println("Pelicula " + (i + 1) + ": " + lista.get(i).toString());
             }	 
 		 while(!valido) {		
-		 if (s.hasNextInt()) {
-		 opcion = s.nextInt();
-		 s.nextLine();
-		 if (opcion > 0 && opcion - 1 < lista.size()) {
-			 idP = daoPelicula.obtenerID(lista.get(opcion-1));
-			 valido = true;
-		 }
-		 else {
-			 System.out.println("Se introdujo una posicion invalida.");
-		 	}
-		 }
-		 else {
-			 System.out.println("Se debe ingresar un número.");
-			 s.nextLine();
-		 }
+			 if (s.hasNextInt()) {
+				 opcion = s.nextInt();
+				 s.nextLine();
+				 if (opcion > 0 && opcion - 1 < lista.size()) {
+					 idP = daoPelicula.obtenerID(lista.get(opcion-1));
+					 valido = true;
+				 }
+				 else {
+					 System.out.println("Se introdujo una posicion invalida.");
+				 }
+			 }
+			 else {
+				 System.out.println("Se debe ingresar un número.");
+				 s.nextLine();
+			 }
 		 }
 		 
 		 valido = false;
 		 //ingresar reseña
 		 //calificacion
 	        while (!valido) {
-	            System.out.print("Ingrese la calificacion de la Pelicula (1-100): ");
+	            System.out.print("Ingrese la calificacion de la Pelicula [1-100] (obligatorio): ");
 	            if(s.hasNextInt()) {
 	            	r.setCalificacion(s.nextInt());
 	            	s.nextLine();
@@ -125,7 +125,7 @@ public class ValidacionesResenia {
 	    		System.out.println("Reseña " + (i + 1) + ": " + lista.get(i).toString());
 	    	}
 	    	while (!valido) {
-	    		System.out.println("Seleccionar una reseña: ");
+	    		System.out.println("Seleccionar una reseña (obligatorio): ");
 	    		if (s.hasNextInt()) {
 	    		opcion = s.nextInt();
 	    		s.nextLine();

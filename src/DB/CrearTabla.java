@@ -4,13 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/* Este metodo se encarga de la creación de las tablas donde se
-* almacenara la informacion de los objetos.
-*  Una vez establecida una conexion,
-*  debería ser lo proximo a ser ejecutado.
-* @param connection objeto conexion a la base de datos SQLite
-* @throws SQLException
-*/
 
 public class CrearTabla {
 
@@ -19,7 +12,7 @@ public class CrearTabla {
 	
 		Statement stmt = connection.createStatement();
 		try {
-			// --- TABLA DE DATOS PERSONALES ---
+			//  TABLA DE DATOS PERSONALES 
 			String sql = " CREATE TABLE IF NOT EXISTS DATOS_PERSONALES ("+
 						 "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"+
 						 "NOMBRE TEXT(100) NOT NULL,"+
@@ -28,7 +21,7 @@ public class CrearTabla {
 						 ");";
 			stmt.executeUpdate(sql);
 			
-			// --- TABLA DE PELICULAS ---
+			//  TABLA DE PELICULAS 
 			sql= " CREATE TABLE IF NOT EXISTS PELICULA ("+
 				 "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"+
 			     "GENERO TEXT(10) NOT NULL,"+ //En una clase de consulta nos recomendaron cambiar genero para que sean 10 carac y guardar el string del genero con valueOf().
@@ -39,7 +32,7 @@ public class CrearTabla {
 			     ");";
 			stmt.executeUpdate(sql);
 			
-			// --- TABLA DE CLIENTES ---
+			//  TABLA DE CLIENTES 
 			sql = " CREATE TABLE IF NOT EXISTS CLIENTE ("+
 					"ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"+
 					"NOMBRE_USUARIO TEXT NOT NULL,"+
@@ -49,7 +42,7 @@ public class CrearTabla {
 					"CONSTRAINT CLIENTE_DATOS_PERSONALES_FK FOREIGN KEY (ID_DATOS_PERSONALES) REFERENCES DATOS_PERSONALES(ID)"+
 					");";
 			stmt.executeUpdate(sql);
-	        // --- TABLA DE RESEÑAS ---
+	        // TABLA DE RESEÑAS 
 			sql = " CREATE TABLE IF NOT EXISTS RESENIA ("+
 				  "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"+
 				  "CALIFICACION INTEGER NOT NULL,"+
@@ -62,7 +55,6 @@ public class CrearTabla {
 				  "CONSTRAINT RESENIA_PELICULA_FK FOREIGN KEY (ID_PELICULA) REFERENCES PELICULA(ID)"+
 				  ");";
 	        stmt.executeUpdate(sql);
-	
 	        stmt.close();
 	        System.out.println("Tablas creadas correctamente.");
 	    } catch (java.sql.SQLException e) {

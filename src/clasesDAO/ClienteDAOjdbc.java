@@ -9,8 +9,9 @@ import java.util.List;
 
 public class ClienteDAOjdbc implements ClienteDAO {
 
+	
     // Buscar cliente por ID
-    public Cliente encontrar(Long id) {
+    public Cliente encontrar(int id) {
         Cliente cliente = null;
         try {
             Connection con = ConexionSQLite.getCon();
@@ -18,24 +19,22 @@ public class ClienteDAOjdbc implements ClienteDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 cliente = new Cliente();
                 cliente.setNombre_usuario(rs.getString("NOMBRE_USUARIO"));
                 cliente.setMail(rs.getString("EMAIL"));
                 cliente.setContrasenia(rs.getString("CONTRASENIA"));
             }
-
             rs.close();
             ps.close();
-
         } catch (SQLException e) {
             System.out.println("Error de SQL: " + e.getMessage());
         }
         return cliente;
     }
 
-    // Eliminar cliente por mail (o podés usar ID)
+    
+    // Eliminar cliente por mail
     public void eliminar(Cliente c) {
         try {
             Connection con = ConexionSQLite.getCon();
@@ -49,6 +48,7 @@ public class ClienteDAOjdbc implements ClienteDAO {
         }
     }
 
+    
     // Guardar cliente
     public void guardar(Cliente c) {
         try {
@@ -66,6 +66,7 @@ public class ClienteDAOjdbc implements ClienteDAO {
         }
     }
 
+    
     // Listar todos los clientes
     public List<Cliente> listar() {
         List<Cliente> lista = new LinkedList<>();
@@ -80,63 +81,64 @@ public class ClienteDAOjdbc implements ClienteDAO {
                 cliente.setNombre_usuario(rs.getString("NOMBRE_USUARIO"));
                 cliente.setMail(rs.getString("EMAIL"));
                 cliente.setContrasenia(rs.getString("CONTRASENIA"));
+                cliente.setIdDP(rs.getInt("ID_DATOS_PERSONALES"));
                 lista.add(cliente);
-            }
-          
+            }         
             rs.close();
             ps.close();
-
         } catch (SQLException e) {
             System.out.println("Error de SQL: " + e.getMessage());
         }
         return lista;
     }
 
-public boolean validarCliente(String usuario, String contrasenia) {
-	boolean existe = false;
-	 try {
-         Connection con = ConexionSQLite.getCon();
-         String sql = "SELECT 1 FROM CLIENTE WHERE NOMBRE_USUARIO = ? AND CONTRASENIA = ?";
-         PreparedStatement ps = con.prepareStatement(sql);
-         ps.setString(1, usuario);
-         ps.setString(2, contrasenia);
-         ResultSet rs = ps.executeQuery();
+    
+    // Verificar que el Cliente existe en la base de datos
+    public boolean validarCliente(String usuario, String contrasenia) {
+    	boolean existe = false;
+    	try {
+    		Connection con = ConexionSQLite.getCon();
+    		String sql = "SELECT 1 FROM CLIENTE WHERE NOMBRE_USUARIO = ? AND CONTRASENIA = ?";
+    		PreparedStatement ps = con.prepareStatement(sql);
+    		ps.setString(1, usuario);
+    		ps.setString(2, contrasenia);
+    		ResultSet rs = ps.executeQuery();
+    		
+    		if (rs.next()) {
+    			existe = true;
+    		}
 
-         if (rs.next()) {
-            existe = true;
-         }
+    		rs.close();
+    		ps.close();
+    	} 
+    	catch (SQLException e) {
+    		System.out.println("Error de SQL: " + e.getMessage());
+    	}
+    	return existe;
+    }
 
-         rs.close();
-         ps.close();
 
+	// Obtener el ID del cliente
+    public int obtenerID(String usuario, String contrasenia) {
+    	int id= -1;
+    	try {
+    		Connection con = ConexionSQLite.getCon();
+    		String sql = "SELECT ID FROM CLIENTE WHERE NOMBRE_USUARIO = ? AND CONTRASENIA = ?";
+    		PreparedStatement ps = con.prepareStatement(sql);
+    		ps.setString(1, usuario);
+    		ps.setString(2, contrasenia);
+    		ResultSet rs = ps.executeQuery();
+
+    		if (rs.next()) {
+	           id = rs.getInt("ID");
+    		}
+
+    		rs.close();
+    		ps.close();
      } 
-	 catch (SQLException e) {
-         System.out.println("Error de SQL: " + e.getMessage());
-     }
-	return existe;
-	}
-
-public int obtenerID(String usuario, String contrasenia) {
-	int id= -1;
-	 try {
-         Connection con = ConexionSQLite.getCon();
-         String sql = "SELECT ID FROM CLIENTE WHERE NOMBRE_USUARIO = ? AND CONTRASENIA = ?";
-         PreparedStatement ps = con.prepareStatement(sql);
-         ps.setString(1, usuario);
-         ps.setString(2, contrasenia);
-         ResultSet rs = ps.executeQuery();
-
-         if (rs.next()) {
-            id = rs.getInt("ID");
-         }
-
-         rs.close();
-         ps.close();
-
-     } 
-	 catch (SQLException e) {
-         System.out.println("Error de SQL: " + e.getMessage());
-     }
-	return id;
-	}
+    	catch (SQLException e) {
+    		System.out.println("Error de SQL: " + e.getMessage());
+    	}
+    	return id;
+    }
 }

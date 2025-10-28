@@ -62,7 +62,7 @@ public String toString() {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     String fechaFormateada = fecha_hora.format(formatter);
 	return "Calificación = " + calificacion + ", Comentario = " + comentario + ", Aprobado = " + aprobado
-			+ ", Fecha = " + fechaFormateada;
+			+ ", Fecha = " + fechaFormateada +", ID Cliente = " +idC +", ID Pelicula = " +idP;
 }
 
 }
