@@ -1,4 +1,4 @@
-package Modelo.POO;
+package Modelo.poo;
 
 public class Pelicula {
 	
@@ -7,16 +7,17 @@ private String titulo;
 private String resumen;
 private String director; 
 private float duracion;
-
+private int id;
 
 public Pelicula() {}
-public Pelicula(Genero genero, String titulo, String resumen, String director, int duracion) {
+public Pelicula(Genero genero, String titulo, String resumen, String director, int duracion,int id) {
 	super();
 	this.genero = genero;
 	this.titulo = titulo;
 	this.resumen = resumen;
 	this.director = director;
 	this.duracion = duracion;
+	this.id = id;
 }
 
 public Genero getGenero() {
@@ -49,6 +50,14 @@ public float getDuracion() {
 public void setDuracion(float duracion) {
 	this.duracion = duracion;
 }
+public int getId() {
+	return id;
+}
+
+public void setId(int id) {
+	this.id = id;
+}
+
 @Override
 public String toString() {
 	return "Género = " + genero + ", Título = " + titulo + ", Resumen = " + resumen + ", Director = " + director

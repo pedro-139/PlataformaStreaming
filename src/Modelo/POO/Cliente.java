@@ -1,4 +1,4 @@
-package Modelo.POO;
+package Modelo.poo;
 
 
 public class Cliente {
@@ -6,15 +6,16 @@ private String nombre_usuario;
 private String mail;
 private String contrasenia;
 private int idDP;
-
+private int id;
 public Cliente() {}
 
-public Cliente(String nombre_usuario, String mail, String contrasenia, int idDP) {
+public Cliente(String nombre_usuario, String mail, String contrasenia, int idDP, int id) {
 	super();
 	this.nombre_usuario = nombre_usuario;
 	this.mail = mail;
 	this.contrasenia = contrasenia;
 	this.idDP = idDP; 
+	this.setId(id);
 }
 
 public String getNombre_usuario() {
@@ -51,10 +52,19 @@ public int getIdDP() {
 public void setIdDP(int idDP) {
 	this.idDP = idDP;
 }
+public int getId() {
+	return id;
+}
+
+public void setId(int id) {
+	this.id = id;
+}
 
 public String toString() {
 	return "Nombre de usuario = " + nombre_usuario + ", Email = " + mail + ", Contraseña = " + contrasenia +", ID Datos personales = " +idDP;
 }
+
+
 
 
 

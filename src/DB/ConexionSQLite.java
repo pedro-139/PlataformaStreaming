@@ -1,4 +1,4 @@
-package DB;
+package db;
 import java.sql.*;
 
 public class ConexionSQLite {
@@ -20,6 +20,17 @@ public class ConexionSQLite {
     
     public static Connection getCon() {
         return con;
+    }
+    public static void cerrarConexion() {
+        if (con != null) {
+            try {
+                con.close();
+                con = null; // libera la referencia
+                System.out.println("Conexión cerrada correctamente.");
+            } catch (SQLException e) {
+                System.out.println("Error al cerrar la conexión: " + e.getMessage());
+            }
+        }
     }
 
     private ConexionSQLite() {

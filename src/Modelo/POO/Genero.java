@@ -1,4 +1,4 @@
-package Modelo.POO;
+package Modelo.poo;
 
 public enum Genero {
 	    ACCION,

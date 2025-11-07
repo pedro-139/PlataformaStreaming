@@ -1,17 +1,24 @@
-package Main;
+package main;
 
-import DB.*;
-import clasesDAO.*;
-import Modelo.POO.*;
+import db.*;
+import factoryDAO.FactoryDAO;
+import dao.*;
+import Modelo.poo.*;
+import comparador.ComparadorMail;
+import comparador.ComparadorNombreUsuario;
+
 import java.util.Scanner;
 import java.sql.Connection;
+import java.util.LinkedList;
 import java.util.List;
-
+import servicios.*;
 public class Main {
     public static void main(String[] args) {
     	
 	    boolean valido = false;
+	    boolean ok =false;
 	    String res;
+		String msg;
 	    int opcion = -1;
 	    Scanner s = new Scanner(System.in);
 	    Connection con = ConexionSQLite.getCon();
@@ -45,37 +52,113 @@ public class Main {
 	        			break;
 	        		}
 	        		case 1:{ 
-	        			DatosPersonales d;
-	        			DatosPersonalesDAO dDAO = FactoryDAO.getDatosPersonalesDAO();
+	        			DatosPersonales d = new DatosPersonales();
 	        			valido = false;
-	        			while(!valido){
-	        				d = ValidacionesDatosPersonales.registrarDatosPersonales(s);
-	        				System.out.println("Los datos ingresados son: '" +d.toString() + "'. ¿Es correcto? (y/n)");
-	        				res = s.next();
-	        				s.nextLine(); 
-	        				if (res.equalsIgnoreCase("y")) {
-	        					valido = true;
-	        					dDAO.guardar(d);
-	        				}  
+						ok =false;
+	        			while(!valido){				
+	        				// NOMBRE
+	        				System.out.print("Ingrese el nombre (obligatorio): ");
+    						d.setNombre(s.nextLine());
+							// APELLIDO
+        					System.out.print("Ingrese el apellido (obligatorio): ");
+        					d.setApellido(s.nextLine());
+ 					       // DNI
+						   while(!ok){
+							   System.out.print("Ingrese el DNI (obligatorio): ");
+							   if (s.hasNextInt()) {
+								   d.setDNI(s.nextInt());
+								   s.nextLine();
+								   ok = true;
+							   } else {
+								   System.out.println("El DNI solo debe tener numeros. Ingrese otro.");
+								   s.nextLine();
+							   }
+						   }
+						   msg = ValidacionesDatosPersonales.registrarDatosPersonales(d);
+						   if (msg.equals("Datos Personales creado correctamente")){
+							   System.out.println("Los datos ingresados son: '" +d.toString() + "'. ¿Es correcto? (y/n)");
+							   res = s.next();
+							   s.nextLine(); 
+							   if (res.equalsIgnoreCase("y")) 
+								   valido = true;
+							   	   //guardar en base de datos
+						   }
+						   else {
+							   System.out.println(msg);
+							   ok = false;
+						   }
 	        			}
+	        			msg = "";
 	        			break;
-	        		}
+	        		}		
+	        		
 	        		case 2: {
-	        			Cliente c;
-	        			ClienteDAO cDAO = FactoryDAO.getClienteDAO();
+	        			Cliente c = new Cliente();
+	        			DatosPersonalesDAO daoDatos = FactoryDAO.getDatosPersonalesDAO();        			
+	        			List <DatosPersonales> lista = daoDatos.listar();
 	        			valido = false;
 	        			while(!valido){
-	        				c = ValidacionesCliente.registrarCliente(s);
-	        				System.out.println("Los datos ingresados son: '" +c.toString() + "'. ¿Es correcto? (y/n)");
-	        				res = s.next();
-	        				s.nextLine(); 
-	        				if (res.equalsIgnoreCase("y")) {
-	        					valido = true;
-	        					cDAO.guardar(c);
-	        				}  
+	        				
+	        				// Seleccionar un dato personal de la base de datos.
+	        				
+	        				while (!ok) {
+	        					System.out.println("Elegir una persona (obligatorio): ");
+	        					for(int i = 0; i<lista.size(); i++) {
+	        						System.out.println((i + 1) + ": " + lista.get(i).toString());
+	        					}    
+	        					if (s.hasNextInt()) {
+	        						opcion = s.nextInt();
+	        						s.nextLine();
+	        						if(opcion > 0 && opcion - 1<lista.size()) {        			    		         
+	        							c.setIdDP(daoDatos.obtenerId(lista.get(opcion - 1)));       
+	        							ok = true;
+	        						}
+	        						else System.out.println("Se introdujo una opcion inválido.");	            	
+	        					} else {
+	        						System.out.println("Se debe introducir un numero.");
+	        						s.nextLine();
+	        					}   
+	        				}
+	        				ok = false;
+	        				
+	        				 // Ingresar nombre de usuario
+	        				
+	        				System.out.print("Ingrese el nombre de usuario (obligatorio): ");
+	        				c.setNombre_usuario(s.nextLine());    		
+	        				
+	        				//Correo	
+	        				
+	        				System.out.print("Ingrese el correo (obligatorio): ");
+	        				c.setMail(s.nextLine());		
+	        				
+	        				//Contraseña    
+	        				
+	        				System.out.print("Ingrese la contraseña (obligatorio): ");
+	        				c.setContrasenia(s.nextLine());		
+	        				
+	        				// Validar Cliente	
+	        				
+	        				msg = ValidacionesCliente.registrarCliente(c);
+	        				if(msg.equals("Cliente creado correctamente")) {
+	        					System.out.println("Los datos ingresados son: '" +c.toString() + "'. ¿Es correcto? (y/n)");
+		        				res = s.next();
+		        				s.nextLine(); 
+		        				if (res.equalsIgnoreCase("y")) {
+		        					valido = true;
+		        					
+		        					
+		        					ClienteDAO cDAO = FactoryDAO.getClienteDAO();
+		        					cDAO.guardar(c);// guardar en base de datos.
+		        				}  
+	        				}
+	        				else {
+	        					System.out.println(msg);
+	        					ok = false;
+	        				}
 	        			}
+	        			msg = "";
 	        			break;
-	        		}
+	        		}		
 	        		case 3:{ 
 	        			Pelicula p;
 	        			PeliculaDAO pDAO = FactoryDAO.getPeliculaDAO();                
@@ -92,19 +175,59 @@ public class Main {
 	        			} 
 	        			break;
 	        		}
-	        		case 4:{        		
-	        			List<Cliente> lista = ValidacionesCliente.listarClientes(s);
-	        			DatosPersonalesDAO dDao = FactoryDAO.getDatosPersonalesDAO();
-	        			DatosPersonales d = new DatosPersonales();
-	        			if(lista.size() != 0) {
-	        				for (int i = 0; i<lista.size(); i++) {    	
-	        					System.out.print(" Cliente " + (i + 1) + ": " + lista.get(i).toString());
-	        					d = dDao.encontrar(lista.get(i).getIdDP());
-	        					System.out.print(" Datos Personales: " + d.toString() +"\n");
-	        					
+	        		case 4:{
+	        			boolean termino = false;
+	        			List<Cliente> lista = new LinkedList<Cliente>();
+	        			int i;
+	        			 do {
+	        				 System.out.println("Ordenar la lista por: ");
+	        				 System.out.println("0. Ningun orden");
+	        				 System.out.println("1. Mail ");
+	        				 System.out.println("2. Nombre de usuario");
+	        				 System.out.print("Ingrese una opción: ");
+	        				 if (s.hasNextInt()) {	        		            	         		             
+	        					 i = s.nextInt();
+	        					 s.nextLine();
+	        					 
+	        					 switch (i) {
+	        					 case 0: {
+	        						 lista = ValidacionesCliente.listarClientes(i);
+	        						 System.out.println("Lista de clientes (sin orden): ");
+	        						 termino = true;
+	        						 break;
+	        					 }
+	        					 case 1:{
+	        						 lista = ValidacionesCliente.listarClientes(i);
+	        						 System.out.println("Lista de clientes (ordenado por Mail): ");
+	        						 termino = true;
+	        						 break;
+	        					 }
+	        					 case 2:{  
+	        						 lista = ValidacionesCliente.listarClientes(i);
+	        						 System.out.println("Lista de clientes (ordenado por nombre): ");
+	        						 termino = true;
+	        						 break;
+	        					 }
+	        					 default :
+	        						 System.out.println("Opción inválida");		      					 
+	        					 }
+	        				 } else {
+	        					 System.out.println("Opcion invalida. Se debe ingresar un numero");
+	        					 s.nextLine();
+	        				 }      		            
+	        			 } while (!termino);
+	        			 
+	        			 if(lista.isEmpty()) {
+	        				 System.out.println("No hay clientes en la base de datos.");	 
+	        			 }
+	        			 else {
+	        				for (int j = 0; j<lista.size(); j++) {    	
+	        					System.out.print(" Cliente " + (j + 1) + ": " + lista.get(j).toString());
+	        		//			d = dDao.encontrar(lista.get(i).getIdDP());
+	        				//	System.out.print(" Datos Personales: " + d.toString() +"\n"); 					
 	        				}	
 	        			}
-	        			else  System.out.println("No hay clientes en la base de datos.");	        		
+	        			        		
 	        			break;
 	        		}
 	        		case 5:{
@@ -155,6 +278,7 @@ public class Main {
 	    } // Salida del while   
 	    
 	    s.close();
+	    ConexionSQLite.cerrarConexion();
 	        
     } // Salida del static main
     

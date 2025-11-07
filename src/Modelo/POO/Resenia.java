@@ -1,4 +1,4 @@
-package Modelo.POO;
+package Modelo.poo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,9 +9,10 @@ private boolean aprobado;
 private LocalDateTime fecha_hora;
 private int idC;
 private int idP;
+private int id;
 
 public Resenia() {}
-public Resenia(int calificacion, String comentario, boolean aprobado, LocalDateTime fecha_hora, int idC, int idP) {
+public Resenia(int calificacion, String comentario, boolean aprobado, LocalDateTime fecha_hora, int idC, int idP,int id) {
 	super();
 	this.calificacion = calificacion;
 	this.comentario = comentario;
@@ -19,6 +20,7 @@ public Resenia(int calificacion, String comentario, boolean aprobado, LocalDateT
 	this.fecha_hora = fecha_hora;
 	this.idC = idC;
 	this.idP = idP;
+	this.id = id;
 }
 public int getCalificacion() {
 	return calificacion;
@@ -56,6 +58,14 @@ public int getIdP() {
 public void setIdP(int idP) {
 	this.idP = idP;
 }
+public int getId() {
+	return id;
+}
+
+public void setId(int id) {
+	this.id = id;
+}
+
 @Override
 public String toString() {
 	
