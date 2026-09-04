@@ -1,13 +1,13 @@
 # Plataforma de Streaming
 
-Se desarrollo una Plataforma de Streaming en Java para la materia Taller de lenguajes II.
-La aplicación permite registrar usuarios, iniciar sesión, buscar películas y calificar películas.
-Se utilizó SQLite para realizar una base de datos. Aplicación del patrón DAO y uso de API JDBC.
+Se desarrolló una Plataforma de Streaming en Java para la materia Taller de Lenguajes II. La aplicación permite registrar usuarios, iniciar sesión, buscar películas y calificarlas. Se utilizó SQLite para la base de datos, aplicando el patrón DAO y la API JDBC.
 
-El proyecto utiliza Java Swing para la interfaz gráfica, se aplico el modelo MVC para organizar la aplicación y concurrencia (threads)
+El proyecto utiliza Java Swing para la interfaz gráfica, el modelo MVC para organizar la aplicación y concurrencia mediante threads.
 
 ## Ejecución
 
-Requiere Java 21 o superior. Desde la carpeta principal del proyecto, ejecutar en la terminal:
+Requiere **Java 21 o superior**. Desde la carpeta principal del proyecto, ejecutar en la terminal:
 
+```bash
 java -cp "PlataformaStreaming.jar;recursos/*" main.MainGUI
+```
